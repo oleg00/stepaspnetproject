@@ -1,0 +1,95 @@
+@model WebAppBlog.UI.ViewModels.PostViewModel 
+
+@{
+    ViewData["Title"] = "Posts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create Post</a>
+</p>
+
+<div class="container">
+    
+    @foreach (var post in Model.Posts)
+    {
+        <div></div>
+
+        <div class="row">
+            <!-- Blog Post Content Column -->
+            <div class="col-lg-8" >
+                <!-- Blog Post -->
+                <!-- Title -->
+                <h1>@post.ShortContent</h1> <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-primary" style="margin: 10px;">Edit</a>
+                <!-- Author -->
+                <p class="lead">
+                    by <a href="#">@post.ApplicationUser.UserName</a>
+                </p>
+                <hr>
+                <!-- Date/Time -->
+                <p><span class="glyphicon glyphicon-time"></span> Posted on @post.PublishDate</p>
+                <hr>
+                <!-- Preview Image -->
+                <img class="img-responsive" src="@post.ImageUrl" width="900" height="300">
+                <hr>
+                <!-- Post Content -->
+                <p class="lead">
+                    @post.FullContent
+                </p>
+                <hr>
+                <!-- Blog Comments -->
+                
+                <hr>
+                <!-- Posted Comments -->
+                <!-- Comment -->
+                @{ @*var filteredComments = post.Comments.OrderBy(c => c.ApplicationUser._Rate);*@
+                //var filteredComments = post.Comments.Where(c => c.ApplicationUser._IsBlocked != true);
+                var sortedComments = post.Comments.OrderBy(c => c.ApplicationUser._Rate);}
+
+                @foreach (var comment in sortedComments)
+                {
+                <div class="media">
+                    <div class="media-body">
+                        <h4 class="media-heading">
+
+                            @{ var cu = @Model.Users.Single(u => u.Id == comment.ApplicationUserId);
+                                string cuInfo = $"{cu} | Rating : {cu._Rate.ToString()}";}
+
+                            @cuInfo
+
+                            <small>@comment.PublishDate</small>
+                        </h4>
+                        @comment.Content
+                    </div>
+                </div> 
+                }
+                <hr />
+                <!-- Comments Form -->
+                <div class="well">
+                    <h4>Leave a Comment:</h4>
+                    <form method="post" asp-action="ToComment" asp-route-id="@post.Id">
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" name="TextAreaComment" asp-for="TextAreaComment"></textarea>
+                        </div>
+                        <input type="submit" value="ToComment"/> 
+                    </form>
+                </div>
+            </div>
+        </div>
+            }
+        </div>
+
+@for (int i = 1; i <= Model.PageViewModel.TotalPages; i++)
+{
+    <a asp-action="Index"
+       asp-route-page="@i"
+       class="btn btn-default btn-primary">
+        @i
+    </a>
+}
+
+@section ScriptsBlog {
+    <link href="~/css/blog-post.css" rel="stylesheet"/>
+}

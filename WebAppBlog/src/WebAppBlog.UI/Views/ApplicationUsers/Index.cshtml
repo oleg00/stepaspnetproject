@@ -1,0 +1,55 @@
+@model IEnumerable<WebAppBlog.UI.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model._IsBlocked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model._Rate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item._IsBlocked)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item._Rate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="SetRating" asp-route-id="@item.Id">SetRating</a> |
+                <a asp-action="ToBanTheUser" asp-route-id="@item.Id">ToBanTheUser</a> |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
